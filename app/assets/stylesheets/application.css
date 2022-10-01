@@ -33,3 +33,7 @@ tr:nth-child(even) {
 #number {
   width: 280px;
 }
+
+#error {
+  color: red;
+}

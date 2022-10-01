@@ -4,8 +4,12 @@ module V1
     format :json
     prefix :api
 
+    rescue_from :all do |e|
+      error!({ error: e&.message }, 500, { 'Content-Type' => 'application/json' })
+    end
+
     # Set to local host since app is not live
-    SITE_NAME = "localhost"
+    SITE_NAME = "http://localhost:3000/"
 
     helpers do
       def current_user
@@ -24,7 +28,7 @@ module V1
     resource :weather do
       desc 'Retrieves the weather based on an address.'
       params do
-        requires :address, type: String, desc: 'The address to retrieve the weather for.'
+        requires :address, type: String, except_values: { value: [""] }, desc: 'The address to retrieve the weather for.'
       end
       get :address do
         authenticate!

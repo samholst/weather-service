@@ -4,9 +4,71 @@
 <h2> Weather Search</h2>
 <br>
 
-<form action="/">
-  <input type="text" id="number" name="number" value="" placeholder="Search by number here (Format: 1234567890)">
+<form id="address-form" action="/">
+  <input type="text" id="address" name="address" value="" placeholder="Search by address (123 ABC St. Las Vegas, NV 89123)">
   <input type="submit" value="Search">
 </form>
-
+<div id="error"></div>
 <br>
+<br>
+
+<div id="cached"></div>
+<br>
+<div id="low"></div>
+<br>
+<div id="high"></div>
+<br>
+<div id="temp"></div>
+<br>
+<div id="extended-forecast"></div>
+
+<script>
+(function() {
+  var form = document.getElementById("address-form");
+
+  form.addEventListener("submit", function(evt) {
+    evt.preventDefault();
+
+    let address = document.getElementById("address");
+
+    fetch(`/api/v1/weather/address?address=${address.value}`)
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(json) {
+      if (json.error) {
+        document.getElementById("error").innerHTML = json.error;
+        resetHTML();
+      } else {
+        addHTML(json);
+      }
+    });
+  });
+
+  function resetHTML() {
+    document.getElementById("low").innerHTML = "";
+    document.getElementById("high").innerHTML = "";
+    document.getElementById("temp").innerHTML = "";
+    document.getElementById("cached").innerHTML = "";
+    document.getElementById("extended-forecast").innerHTML = "";
+  }
+
+  function addHTML(json) {
+    document.getElementById("error").innerHTML = "";
+    document.getElementById("low").innerHTML = `Low: ${json.low} °C`;
+    document.getElementById("high").innerHTML = `High: ${json.high} °C`;
+    document.getElementById("temp").innerHTML = `Current Temp: ${json.current_temp} °C`;
+    document.getElementById("cached").innerHTML = `Cached: ${json.pulled_from_cache}`;
+
+    let forcasts = "Extended Forecast: <ul>"
+
+    for(i = 0; i < json.extended_forecast.length; i++) {
+      forecast = json.extended_forecast[i]
+      forcasts = forcasts + `<li>${forecast.dt} ${forecast.temp} °C</li>`
+    }
+
+    forcasts = forcasts + "</ul>"
+    document.getElementById("extended-forecast").innerHTML = forcasts;
+  }
+})();
+</script>
