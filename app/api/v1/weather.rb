@@ -37,10 +37,9 @@ module V1
         address.parse_zip
 
         code = ZipCode.find_or_initialize_by(code: address.zip)
-        code.pulled_from_cache = false
 
         if code.cache_is_not_expired?
-          code.pulled_from_cache = true
+          code.set_from_cache!
           return present(code, with: Entities::ZipCode)
         end
 

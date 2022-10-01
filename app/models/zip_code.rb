@@ -20,4 +20,12 @@ class ZipCode < ApplicationRecord
   def cache_is_not_expired?
     !self.new_record? && (Time.now < self.last_cached_at + 30.minutes)
   end
+
+  def set_from_cache!
+    @pulled_from_cache = true
+  end
+
+  def pulled_from_cache
+    @pulled_from_cache ||= false
+  end
 end
