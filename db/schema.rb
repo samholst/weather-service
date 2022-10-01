@@ -33,6 +33,8 @@ ActiveRecord::Schema.define(version: 2022_09_29_184330) do
     t.decimal "low", precision: 4, scale: 1
     t.decimal "current_temp", precision: 10
     t.text "extended_forecast"
+    t.decimal "lat", precision: 8, scale: 6
+    t.decimal "lon", precision: 9, scale: 6
     t.timestamp "last_cached_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

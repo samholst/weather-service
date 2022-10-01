@@ -2,13 +2,15 @@
 
 module Weather
   class ZipForecast
-    attr_reader :high, :low, :average, :zip, :hourly_forecasts, :current_temp
+    attr_reader :high, :low, :average, :zip, :hourly_forecasts, :current_temp, :lat, :lon
 
-    def initialize(result, zip)
+    def initialize(result, zip, lat, lon)
       @zip = zip
       @average = nil
       @low = nil
       @high = nil
+      @lat = lat
+      @lon = lon
       @temperatures = []
       @hourly_forecasts = extract_forecast_values(result["hourly"])
       @current_temp = result["current"]["temp"]

@@ -1,7 +1,7 @@
 class ZipCode < ApplicationRecord
   attr_accessor :pulled_from_cache
 
-  validates_presence_of :code
+  validates_presence_of :code, :lat, :lon
   validates_uniqueness_of :code
 
   serialize :extended_forecast, JSON
@@ -13,6 +13,8 @@ class ZipCode < ApplicationRecord
       high: zip_forecast.high,
       current_temp: zip_forecast.current_temp,
       extended_forecast: zip_forecast.hourly_forecasts,
+      lat: zip_forecast.lat,
+      lon: zip_forecast.lon,
       last_cached_at: Time.now
     )
   end

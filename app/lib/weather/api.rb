@@ -8,39 +8,50 @@ module Weather
     FORECAST_ENDPOINT = '/data/3.0/onecall'
     APP_ID = Rails.application.credentials.weather_api_key
 
-    attr_reader :zip
+    attr_reader :zip, :lat, :lon
 
-    def initialize(zip:)
+    def initialize(zip:, lat: nil, lon: nil)
       @zip = zip
+      @lat = lat
+      @lon = lon
     end
 
     # Makes two API requests:
-    # 1st. To get the lat/lon based on the ZIP provided
+    # 1st. To get the lat/lon based on the ZIP provided unless lat/lon exist
     # 2nd. Retrieve forecast data from the provided lat/lon coordinates
     def get_result
       return nil if zip.blank?
+      return nil unless get_zip
+
+      get_forecast
+    end
+
+    private
+
+    def get_zip
+      return true if lat && lon
 
       zip_response = get(ZIP_ENDPOINT, build_zip_endpoint_params)
 
-      return nil unless zip_response && zip_response["coord"]
+      return false unless zip_response && zip_response["coord"]
 
+      @lat = zip_response["coord"]["lat"]
+      @lon = zip_response["coord"]["lon"]
+    end
+
+    def get_forecast
       forecast_response = get(
         FORECAST_ENDPOINT,
-        build_forecast_endpoint_params(
-          zip_response["coord"]["lat"],
-          zip_response["coord"]["lon"]
-        )
+        build_forecast_endpoint_params
       )
 
       create_zip_forecast(forecast_response)
     end
 
-    private
-
     def create_zip_forecast(forecast_response)
       return nil unless forecast_response
 
-      ZipForecast.new(forecast_response, zip)
+      ZipForecast.new(forecast_response, zip, lat, lon)
     end
 
     def get(url, options)
@@ -60,7 +71,7 @@ module Weather
       }
     end
 
-    def build_forecast_endpoint_params(lat, lon)
+    def build_forecast_endpoint_params
       {
         query: {
           lat: lat,

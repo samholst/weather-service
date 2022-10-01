@@ -102,6 +102,8 @@ class V1::WeatherTest < ActionDispatch::IntegrationTest
         high: 15.5,
         extended_forecast: extended_forecast_res,
         current_temp: temp,
+        lat: lat,
+        lon: lon,
         last_cached_at: Time.now
       )
       Weather::API.expects(:get).at_most(0).with(Weather::API::ZIP_ENDPOINT, zip_options).returns(res_zip)

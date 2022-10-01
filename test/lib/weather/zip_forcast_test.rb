@@ -2,6 +2,8 @@ require "test_helper"
 
 class Weather::ZipForecastTest < ActiveSupport::TestCase
   let(:zip) { 89123 }
+  let(:lon) { 0 }
+  let(:lat) { 0 }
   let(:timestamp) { Time.now }
   let(:hourly) { [{ "temp" => 10.5, "dt" => timestamp.to_i, "extra" => "yes" }, { "temp" => 15.5, "dt" => (timestamp + 5.minutes).to_i }] }
   let(:res_forcast) {
@@ -14,11 +16,13 @@ class Weather::ZipForecastTest < ActiveSupport::TestCase
   }
 
   before do
-    @subject = Weather::ZipForecast.new(res_forcast, zip)
+    @subject = Weather::ZipForecast.new(res_forcast, zip, lat, lon)
   end
 
   it "tests initialize method" do
     assert_equal(@subject.zip, zip)
+    assert_equal(@subject.lat, lat)
+    assert_equal(@subject.lon, lon)
     assert_nil(@subject.average)
     assert_nil(@subject.low)
     assert_nil(@subject.high)
@@ -34,7 +38,6 @@ class Weather::ZipForecastTest < ActiveSupport::TestCase
 
     @subject.calculate
   end
-
 
   describe "private methods" do
     before do

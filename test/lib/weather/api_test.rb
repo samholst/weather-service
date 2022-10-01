@@ -49,31 +49,72 @@ class Weather::APITest < ActiveSupport::TestCase
   }
   let(:res_forcast_failure) { OpenStruct.new(:success? => false, body: { error: "Something went wrong." }.to_json) }
 
-  before do
-    @subject = Weather::API.new(zip: zip)
+  describe 'with no cached values' do
+    before do
+      @subject = Weather::API.new(zip: zip)
+    end
+
+    it "tests initialize method" do
+      assert_equal(@subject.zip, zip)
+      assert_nil(@subject.lat, lat)
+      assert_nil(@subject.lon, lon)
+    end
+
+    it "tests get_result method with success" do
+      Weather::API.expects(:get).with(Weather::API::ZIP_ENDPOINT, zip_options).returns(res_zip)
+      Weather::API.expects(:get).with(Weather::API::FORECAST_ENDPOINT, forcast_options).returns(res_forcast)
+
+      assert_equal(@subject.get_result.class, Weather::ZipForecast)
+    end
+
+    it "tests get_result method with failed first API request" do
+      Weather::API.expects(:get).with(Weather::API::ZIP_ENDPOINT, zip_options).returns(res_zip_failure)
+
+      assert_nil(@subject.get_result)
+    end
+
+    it "tests get_result method with failed second API request" do
+      Weather::API.expects(:get).with(Weather::API::ZIP_ENDPOINT, zip_options).returns(res_zip)
+      Weather::API.expects(:get).with(Weather::API::FORECAST_ENDPOINT, forcast_options).returns(res_forcast_failure)
+
+      assert_nil(@subject.get_result)
+    end
+
+    describe "private methods" do
+      it "tests build_zip_endpoint_params method" do
+        assert_equal(@subject.send(:build_zip_endpoint_params), zip_options)
+      end
+
+      it "tests build_forecast_endpoint_params method" do
+        forcast_options[:query][:lat] = nil
+        forcast_options[:query][:lon] = nil
+        assert_equal(@subject.send(:build_forecast_endpoint_params), forcast_options)
+      end
+    end
   end
 
-  it "tests initialize method" do
-    assert_equal(@subject.zip, zip)
-  end
+  describe 'with cached values' do
+    before do
+      @subject = Weather::API.new(zip: zip, lat: lat, lon: lon)
+    end
 
-  it "tests get_result method with success" do
-    Weather::API.expects(:get).with(Weather::API::ZIP_ENDPOINT, zip_options).returns(res_zip)
-    Weather::API.expects(:get).with(Weather::API::FORECAST_ENDPOINT, forcast_options).returns(res_forcast)
+    it "tests initialize method with lat/lon" do
+      assert_equal(@subject.zip, zip)
+      assert_equal(@subject.lat, lat)
+      assert_equal(@subject.lon, lon)
+    end
 
-    assert_equal(@subject.get_result.class, Weather::ZipForecast)
-  end
+    it "tests get_result method with cached lat/lon" do
+      Weather::API.expects(:get).with(Weather::API::ZIP_ENDPOINT, zip_options).at_most(0)
+      Weather::API.expects(:get).with(Weather::API::FORECAST_ENDPOINT, forcast_options).returns(res_forcast).at_most(1)
 
-  it "tests get_result method with failed first API request" do
-    Weather::API.expects(:get).with(Weather::API::ZIP_ENDPOINT, zip_options).returns(res_zip_failure)
+      assert_equal(@subject.get_result.class, Weather::ZipForecast)
+    end
 
-    assert_nil(@subject.get_result)
-  end
-
-  it "tests get_result method with failed second API request" do
-    Weather::API.expects(:get).with(Weather::API::ZIP_ENDPOINT, zip_options).returns(res_zip)
-    Weather::API.expects(:get).with(Weather::API::FORECAST_ENDPOINT, forcast_options).returns(res_forcast_failure)
-
-    assert_nil(@subject.get_result)
+    describe "private methods" do
+      it "tests build_forecast_endpoint_params method" do
+        assert_equal(@subject.send(:build_forecast_endpoint_params), forcast_options)
+      end
+    end
   end
 end

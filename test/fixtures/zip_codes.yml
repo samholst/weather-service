@@ -2,6 +2,10 @@
 
 one:
   code: 1
+  lat: 0
+  lon: 0
 
 two:
   code: 1
+  lat: 0
+  lon: 0
