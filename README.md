@@ -5,6 +5,8 @@ If `config/master.key` file is need, create the file with value `dfa16bb2caccf02
 My intent is to name the methods used in the project as a way to self document what the method does and it's purpose.
 In the circumstance it may not be clear by the method name alone, it will have a comment above the method. 
 
+I've incorporated Grape::API due to its inherent structure, ability to self document, and create a clean way
+of generating and maintaing API's.
 
 ## Tests
 
