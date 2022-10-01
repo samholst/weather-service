@@ -43,7 +43,7 @@ module V1
           return present(code, with: Entities::ZipCode)
         end
 
-        weather_api = ::Weather::API.new(zip: address.zip, lat: code.lat, lon: code.lon)
+        weather_api = ::Weather::API.new(address.zip, code.lat, code.lon)
         zip_forecast = weather_api.get_result
 
         if zip_forecast

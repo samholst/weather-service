@@ -51,7 +51,7 @@ class Weather::APITest < ActiveSupport::TestCase
 
   describe 'with no cached values' do
     before do
-      @subject = Weather::API.new(zip: zip)
+      @subject = Weather::API.new(zip)
     end
 
     it "tests initialize method" do
@@ -95,7 +95,7 @@ class Weather::APITest < ActiveSupport::TestCase
 
   describe 'with cached values' do
     before do
-      @subject = Weather::API.new(zip: zip, lat: lat, lon: lon)
+      @subject = Weather::API.new(zip, lat, lon)
     end
 
     it "tests initialize method with lat/lon" do

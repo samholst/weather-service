@@ -10,7 +10,9 @@ module Weather
 
     attr_reader :zip, :lat, :lon
 
-    def initialize(zip:, lat: nil, lon: nil)
+    # Can accept a lat/lon cached pair in which case
+    # will avoid an extra API call.
+    def initialize(zip, lat = nil, lon = nil)
       @zip = zip
       @lat = lat
       @lon = lon
