@@ -14,6 +14,9 @@ module Weather
       @zip = zip
     end
 
+    # Makes two API requests:
+    # 1st. To get the lat/lon based on the ZIP provided
+    # 2nd. Retrieve forecast data from the provided lat/lon coordinates
     def get_result
       return nil if zip.blank?
 

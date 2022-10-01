@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Weather
   class ZipForecast
     attr_reader :high, :low, :average, :zip, :hourly_forecasts, :current_temp
