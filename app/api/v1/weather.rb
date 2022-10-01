@@ -36,7 +36,7 @@ module V1
         address = ::Weather::AddressParser.new(params[:address]) 
         address.parse_zip
 
-        code = ZipCode.find_or_initialize_by(code: address.zip) do |c|
+        code = ZipCode.find_or_initialize_by(code: address.zip).tap do |c|
           c.pulled_from_cache = false
         end
 
