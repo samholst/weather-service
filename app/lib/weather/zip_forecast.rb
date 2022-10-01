@@ -8,7 +8,7 @@ module Weather
       @low = nil
       @high = nil
       @temperatures = []
-      @hourly_forecasts = result["hourly"]
+      @hourly_forecasts = extract_forecast_values(result["hourly"])
       @current_temp = result["current"]["temp"]
     end
 
@@ -38,6 +38,10 @@ module Weather
 
     def calculate_high
       @high ||= @temperatures.max
+    end
+
+    def extract_forecast_values(forecasts)
+      forecasts.map { |f| { "dt" => f["dt"], "temp" => f["temp"] } }
     end
   end
 end
