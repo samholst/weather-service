@@ -46,7 +46,7 @@ GET:
 localhost:3000/
 ```
 
-### Send message endpiont
+### Send address endpiont
 
 Use a tool such as Postman to receive an API response back. Don't forget to include the `x-api-key` when doing so.
 
