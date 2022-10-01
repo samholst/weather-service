@@ -78,6 +78,10 @@ class V1::WeatherTest < ActionDispatch::IntegrationTest
       assert_equal(zip_code.extended_forecast, extended_forecast_res)
       assert_equal(zip_code.current_temp, temp)
 
+      zip_code = ZipCode.last
+      zip_code.pulled_from_cache = false
+
+      assert_equal(response.body, Entities::ZipCode.represent(zip_code).to_json)
       value(response).must_be :successful?
     end
 
@@ -108,6 +112,7 @@ class V1::WeatherTest < ActionDispatch::IntegrationTest
       end
 
       zip_code = ZipCode.last
+      zip_code.pulled_from_cache = true
 
       assert_equal(response.body, Entities::ZipCode.represent(zip_code).to_json)
       value(response).must_be :successful?

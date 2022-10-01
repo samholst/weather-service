@@ -32,9 +32,12 @@ module V1
         address = ::Weather::AddressParser.new(params[:address]) 
         address.parse_zip
 
-        code = ZipCode.find_or_initialize_by(code: address.zip)
+        code = ZipCode.find_or_initialize_by(code: address.zip) do |c|
+          c.pulled_from_cache = false
+        end
 
         if code.cache_is_not_expired?
+          code.pulled_from_cache = true
           return present(code, with: Entities::ZipCode)
         end
 

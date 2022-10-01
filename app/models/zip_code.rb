@@ -1,4 +1,5 @@
 class ZipCode < ApplicationRecord
+  attr_accessor :pulled_from_cache
 
   validates_presence_of :code
   validates_uniqueness_of :code
