@@ -1,5 +1,3 @@
-require 'pry'
-
 module Indirizzo
   class Address
     attr_reader :prenum, :number, :sufnum, :street, :city, :state, :zip, :plus4, :country
