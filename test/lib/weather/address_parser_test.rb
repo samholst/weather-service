@@ -11,7 +11,7 @@ class Weather::AddressParserTest < ActiveSupport::TestCase
     assert_equal(@subject.address, address)
   end
 
-  it "tests get method with zip on failure" do
+  it "tests parse_zip method" do
     assert_equal(@subject.parse_zip.class, Indirizzo::Address)
   end
 end

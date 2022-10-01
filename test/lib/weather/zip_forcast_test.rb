@@ -2,9 +2,11 @@ require "test_helper"
 
 class Weather::ZipForecastTest < ActiveSupport::TestCase
   let(:zip) { 89123 }
+  let(:timestamp) { Time.now }
+  let(:hourly) { [{ "temp" => 10.5, "dt" => timestamp.to_i, "extra" => "yes" }, { "temp" => 15.5, "dt" => (timestamp + 5.minutes).to_i }] }
   let(:res_forcast) {
     {
-      "hourly" => [{ "temp" => 10.5, "dt" => Time.now.to_i }, { "temp" => 15.5, "dt" => (Time.now + 5.minutes).to_i }],
+      "hourly" => [{ "temp" => 10.5, "dt" => timestamp.to_i }, { "temp" => 15.5, "dt" => (timestamp + 5.minutes).to_i }],
       "current" => {
         "temp" => 55.0
       }
@@ -49,6 +51,10 @@ class Weather::ZipForecastTest < ActiveSupport::TestCase
 
     it "tests calculate_high method" do
       assert_equal(@subject.send(:calculate_high), 15.5)
+    end
+
+    it "tests extract_forecast_values method" do
+      assert_equal(@subject.send(:extract_forecast_values, hourly), res_forcast["hourly"])
     end
   end
 end

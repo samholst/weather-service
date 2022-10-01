@@ -57,20 +57,20 @@ class Weather::APITest < ActiveSupport::TestCase
     assert_equal(@subject.zip, zip)
   end
 
-  it "tests get method with success" do
+  it "tests get_result method with success" do
     Weather::API.expects(:get).with(Weather::API::ZIP_ENDPOINT, zip_options).returns(res_zip)
     Weather::API.expects(:get).with(Weather::API::FORECAST_ENDPOINT, forcast_options).returns(res_forcast)
 
     assert_equal(@subject.get_result.class, Weather::ZipForecast)
   end
 
-  it "tests get method with zip on failure" do
+  it "tests get_result method with failed first API request" do
     Weather::API.expects(:get).with(Weather::API::ZIP_ENDPOINT, zip_options).returns(res_zip_failure)
 
     assert_nil(@subject.get_result)
   end
 
-  it "tests get method with zip on failure" do
+  it "tests get_result method with failed second API request" do
     Weather::API.expects(:get).with(Weather::API::ZIP_ENDPOINT, zip_options).returns(res_zip)
     Weather::API.expects(:get).with(Weather::API::FORECAST_ENDPOINT, forcast_options).returns(res_forcast_failure)
 
