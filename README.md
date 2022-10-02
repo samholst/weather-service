@@ -8,6 +8,8 @@ In the circumstance it may not be clear by the method name alone, it will have a
 I've incorporated Grape::API due to its inherent structure, ability to self document, and create a clean way
 of generating and maintaing API's.
 
+All temperatures are in Celsius.
+
 ## Tests
 
 Run:
@@ -53,4 +55,31 @@ Use a tool such as Postman to receive an API response back. Don't forget to incl
 POST: 
 ```
 localhost:3000/api/v1/weather/address?address=One Apple Park Way, Cupertino, CA 95014
+```
+
+Response:
+
+```
+{
+    "code": 95014,
+    "high": 32.9,
+    "low": 24.6,
+    "current_temp": 26.0,
+    "extended_forecast": [
+        {
+            "dt": "2022-10-01 16:00:00 UTC",
+            "temp": 26.28
+        },
+        {
+            "dt": "2022-10-01 17:00:00 UTC",
+            "temp": 26.73
+        },
+        {
+            "dt": "2022-10-01 18:00:00 UTC",
+            "temp": 27.61
+        },
+        ...
+    ],
+    "pulled_from_cache": false
+}
 ```
