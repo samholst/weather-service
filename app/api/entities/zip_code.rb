@@ -1,5 +1,3 @@
-require "pry"
-
 module Entities
   class ZipCode < Grape::Entity
     expose :code
